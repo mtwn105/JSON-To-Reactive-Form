@@ -10,6 +10,7 @@ export class AppComponent {
   jsonText: any;
   formText: string = '';
   jsonObj: any;
+  jsonInvalid: any;
 
   generateReactiveForm() {
     if (this.formNameText != null && this.jsonText != null) {
