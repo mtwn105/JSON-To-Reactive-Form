@@ -6,25 +6,16 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: Build & Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
       - name: Install Dependencies
         run: npm install
+      - name: Install Firebase
+        run: npm install firebase
       - name: Build
         run: npm run build --prod
-  deploy:
-    name: Deploy
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@master
-      - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only hosting
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      - name: Deploy
+        run: firebase deploy --token {{secrets.FIREBASE_TOKEN}} --only hosting --non-interactive
