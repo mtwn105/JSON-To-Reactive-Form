@@ -8,31 +8,45 @@ import { Component } from '@angular/core';
 export class AppComponent {
   formNameText: any;
   jsonText: any;
-  formText: string = '';
+  formText = '';
   jsonObj: any;
   jsonInvalid: any;
 
   generateReactiveForm() {
     if (this.formNameText != null && this.jsonText != null) {
       if (this.formNameText.length > 0 && this.jsonText.length > 0) {
-        this.formText = this.formNameText + ': FormGroup;\n\n';
-        this.formText += 'initiateFormGroup() {\n';
-        this.formText += 'this.' + this.formNameText + ' = new FormGroup({\n';
 
-        this.jsonObj = JSON.parse(this.jsonText);
-        let keys = Object.keys(this.jsonObj);
+        try {
 
-        for (let key of keys) {
-          console.log(key, typeof (this.jsonObj[key]));
-          if (typeof (this.jsonObj[key]) != 'object') {
-            this.formText += key + ':' + ' new FormControl(null),\n';
-          } else {
-            this.generateReactiveFormForObject(key, this.jsonObj[key]);
+          this.jsonObj = JSON.parse(this.jsonText);
+          const keys = Object.keys(this.jsonObj);
+          this.formText = this.formNameText + ': FormGroup;\n\n';
+          this.formText += 'initiateFormGroup() {\n';
+          this.formText += 'this.' + this.formNameText + ' = new FormGroup({\n';
+
+
+
+          for (const key of keys) {
+            console.log(key, typeof (this.jsonObj[key]));
+            if (this.jsonObj[key] != null) {
+              if (typeof (this.jsonObj[key]) != 'object') {
+                this.formText += key + ':' + ' new FormControl(null),\n';
+              } else {
+                this.generateReactiveFormForObject(key, this.jsonObj[key]);
+              }
+            } else {
+              throw new Error('Invalid JSON');
+            }
+
           }
+
+          this.formText += '});\n';
+          this.formText += '}';
+        } catch (e) {
+          this.jsonInvalid = true;
         }
 
-        this.formText += '});\n';
-        this.formText += '}';
+
       }
     }
   }
@@ -40,20 +54,24 @@ export class AppComponent {
   generateReactiveFormForObject(key: string, value: any) {
     console.log('KEY', key);
     console.log('IS ARRAY', value.length);
-    let isArray = value.length;
+    const isArray = value.length;
     if (isArray != null) {
-      let keys = Object.keys(value);
+      const keys = Object.keys(value);
       this.formText += key + ': new FormArray([\n';
       this.generateReactiveFormForObjectForArray(value[0]);
       this.formText += ']),\n';
     } else {
-      let keys = Object.keys(value);
+      const keys = Object.keys(value);
       this.formText += key + ': new FormGroup({\n';
-      for (let key of keys) {
-        if (typeof (value[key]) != 'object') {
-          this.formText += key + ':' + ' new FormControl(null),\n';
+      for (const key of keys) {
+        if (value[key] != null) {
+          if (typeof (value[key]) != 'object') {
+            this.formText += key + ':' + ' new FormControl(null),\n';
+          } else {
+            this.generateReactiveFormForObject(key, value[key]);
+          }
         } else {
-          this.generateReactiveFormForObject(key, value[key]);
+          throw new Error('Invalid JSON');
         }
       }
       this.formText += '}),\n';
@@ -63,14 +81,19 @@ export class AppComponent {
 
   }
   generateReactiveFormForObjectForArray(value: any) {
-    let keys = Object.keys(value);
+    const keys = Object.keys(value);
     this.formText += 'new FormGroup({\n';
-    for (let key of keys) {
-      if (typeof (value[key]) != 'object') {
-        this.formText += key + ':' + ' new FormControl(null),\n';
+    for (const key of keys) {
+      if (value[key] != null) {
+        if (typeof (value[key]) != 'object') {
+          this.formText += key + ':' + ' new FormControl(null),\n';
+        } else {
+          this.generateReactiveFormForObject(key, value[key]);
+        }
       } else {
-        this.generateReactiveFormForObject(key, value[key]);
+        throw new Error('Invalid JSON');
       }
+
     }
     this.formText += '}),\n';
   }
