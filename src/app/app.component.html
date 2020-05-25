@@ -33,9 +33,6 @@
   <div class="row">
     <div class="col"></div>
     <div class="col-auto justify-content-center">
-      <mat-error class="font-size-14" *ngIf="jsonInvalid">
-        Please Enter Valid JSON
-      </mat-error>
       <button [disabled]="formNameText == null || jsonText == null || formNameText.length == 0 || jsonText.length == 0"
         (click)="generateReactiveForm()" mat-raised-button color="accent">GENERATE REACTIVE FORM</button>
     </div>

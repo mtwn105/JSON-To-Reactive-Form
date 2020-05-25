@@ -51,6 +51,7 @@ export class AppComponent {
           this.formText += '}';
         } catch (e) {
           this.jsonInvalid = true;
+          let snackBarRef = this.snackBar.open('Please provide valid JSON', 'Close', { duration: 2000 });
           this.formText = '';
         }
       }
