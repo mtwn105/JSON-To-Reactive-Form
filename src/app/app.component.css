@@ -1,5 +1,5 @@
 textarea {
-  height: 20rem;
+  height: 15rem;
   width: 100%;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -13,5 +13,5 @@ mat-form-field {
 }
 
 .height-style {
-  height: 20rem;
+  height: 15rem;
 }

@@ -16,14 +16,24 @@
     <div class="col">
       <mat-form-field appearance="outline">
         <mat-label>Reactive Form</mat-label>
-        <textarea [(ngModel)]="formText" class="w-100" readonly matInput></textarea>
+        <textarea [(ngModel)]="formText" class="w-100" readonly matInput #formOutput></textarea>
+        <div class="row">
+          <div class="col"></div>
+          <div class="col-auto"><button class="copy-button" *ngIf="!jsonInvalid && formText.length > 0"
+              (click)="copyFormToClipboard(formOutput)" mat-mini-fab color="accent"
+              aria-label="Example icon button with a bookmark icon">
+              <mat-icon>content_copy</mat-icon>
+            </button>
+          </div>
+        </div>
+
       </mat-form-field>
     </div>
   </div>
   <div class="row">
     <div class="col"></div>
-    <div class="col-auto">
-      <mat-error class="font-size-12" *ngIf="jsonInvalid">
+    <div class="col-auto justify-content-center">
+      <mat-error class="font-size-14" *ngIf="jsonInvalid">
         Please Enter Valid JSON
       </mat-error>
       <button [disabled]="formNameText == null || jsonText == null || formNameText.length == 0 || jsonText.length == 0"
